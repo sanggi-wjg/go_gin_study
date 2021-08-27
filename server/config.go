@@ -14,6 +14,6 @@ func NewConfig() *Config {
 	return &config
 }
 
-func (config *Config) GetConfigSettings() *Settings {
+func (config *Config) Settings() *Settings {
 	return config.settings
 }

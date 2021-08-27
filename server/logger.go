@@ -1,11 +1,21 @@
 package server
 
 import (
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
+
+var logger = logrus.Logger{
+	Out:          os.Stderr,
+	Formatter:    &logrus.TextFormatter{},
+	Level:        logrus.DebugLevel,
+	ExitFunc:     os.Exit,
+	ReportCaller: false,
+	// Hooks:        hooks,
+}
 
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -30,6 +40,6 @@ func Logger() gin.HandlerFunc {
 		}
 
 		// Use debug level to keep production logs clean.
-		log.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
+		logger.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
 	}
 }
