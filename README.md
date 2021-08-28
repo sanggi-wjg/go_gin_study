@@ -2,12 +2,12 @@
 
 ## [환경]
 ```
-Windosw 10
-go version go1.16.7
+Docker Container
+go version go1.16.3
 
-set GOROOT=C:\Go
-set GOPATH=C:\Go_project
-set GOBIN=C:\Go_project\bin
+ENV     GOROOT /goroot
+ENV     GOPATH /gopath
+ENV     PATH $GOROOT/bin:$GOPATH/bin:$PATH
 ```
 
 ## 설치 Package
@@ -16,18 +16,25 @@ set GOBIN=C:\Go_project\bin
 go get -u github.com/gin-gonic/gin
 https://github.com/gin-gonic/gin
 
+
 # Log
-go get github.com/sirupsen/logrus
+go get -u github.com/sirupsen/logrus
 https://github.com/sirupsen/logrus
 
+
 # ORM 
+go get -u gorm.io/gorm
 https://gorm.io/
+
+go get -u gorm.io/driver/sqlite  (Dev)
+
 
 # Excel 
 https://github.com/qax-os/excelize
 
-# Rad ini
-go get github.com/go-ini/ini
+
+# Read ini
+go get -u github.com/go-ini/ini
 https://github.com/go-ini/ini
 ```
 
