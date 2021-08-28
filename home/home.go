@@ -11,17 +11,3 @@ func Ping(c *gin.Context) {
 		"message": "pong",
 	})
 }
-
-func HelloName(c *gin.Context) {
-	name := c.Param("name")
-
-	c.String(http.StatusOK, "Hello %s", name)
-}
-
-func HelloNameAction(c *gin.Context) {
-	name := c.Param("name")
-	action := c.Param("action")
-	// action:= c.DefaultQuery("action", "send")
-
-	c.String(http.StatusOK, "Hello %s Action %s", name, action)
-}

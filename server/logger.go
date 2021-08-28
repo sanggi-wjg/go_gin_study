@@ -8,13 +8,27 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var Log = logrus.Logger{
-	Out:          os.Stderr,
-	Formatter:    &logrus.TextFormatter{},
-	Level:        logrus.DebugLevel,
-	ExitFunc:     os.Exit,
-	ReportCaller: false,
-	// Hooks:        hooks,
+var log *logrus.Logger
+
+func InitLogger(debug bool) {
+	var log = logrus.Logger{
+		Out:          os.Stdout,
+		Formatter:    &logrus.TextFormatter{},
+		Level:        logrus.DebugLevel,
+		ExitFunc:     os.Exit,
+		ReportCaller: false,
+	}
+
+	if debug {
+		log.SetLevel(logrus.DebugLevel)
+		log.SetFormatter(&logrus.TextFormatter{
+			DisableColors: false,
+			FullTimestamp: true,
+		})
+	} else {
+		log.SetLevel(logrus.InfoLevel)
+		log.SetFormatter(&logrus.JSONFormatter{})
+	}
 }
 
 func Logger() gin.HandlerFunc {
@@ -40,6 +54,6 @@ func Logger() gin.HandlerFunc {
 		}
 
 		// Use debug level to keep production logs clean.
-		Log.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
+		log.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
 	}
 }

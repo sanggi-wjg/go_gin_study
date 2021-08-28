@@ -25,6 +25,10 @@ https://gorm.io/
 
 # Excel 
 https://github.com/qax-os/excelize
+
+# Rad ini
+go get github.com/go-ini/ini
+https://github.com/go-ini/ini
 ```
 
 TODO

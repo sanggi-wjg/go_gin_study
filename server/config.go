@@ -1,43 +1,69 @@
 package server
 
 import (
-	"sync"
+	"os"
+	"time"
 
-	"github.com/sirupsen/logrus"
+	"github.com/go-ini/ini"
 )
 
-var once sync.Once
-
-type Config struct {
-	settings *Settings
-	database string
+type Server struct {
+	RunMode       string
+	Debug         bool
+	HttpPort      string
+	ReadTimeout   time.Duration
+	WriteTimeout  time.Duration
+	FileAllowExts []string
 }
 
-func NewConfig() *Config {
-	config := Config{
-		settings: NewSettings(),
-		database: "",
+type Database struct {
+	Type     string
+	Host     string
+	Port     int
+	User     string
+	Password string
+}
+
+type App struct {
+	AppTitle         string
+	AppDeveloper     string
+	AppDeveloperMail string
+	FavIconURL       string
+	FavIconPath      string
+	MediaURL         string
+	MediaRoot        string
+	StaticURL        string
+	StaticRoot       string
+	TemplateRoot     string
+}
+
+var ServerConfig = &Server{}
+var DatabaseConfig = &Database{}
+var AppConfig = &App{}
+
+func InitConfig() {
+	// TODO : env 비교해서 ini 정해주자 env := os.Getenv("ENV")
+	cfg := loadAppIni("app_debug.ini")
+
+	cfg.Section("Server").MapTo(ServerConfig)
+	cfg.Section("Database").MapTo(DatabaseConfig)
+	cfg.Section("App").MapTo(AppConfig)
+
+	ServerConfig.WriteTimeout = ServerConfig.WriteTimeout * time.Second
+	ServerConfig.ReadTimeout = ServerConfig.ReadTimeout * time.Second
+
+	if ServerConfig.RunMode == "debug" {
+		ServerConfig.Debug = true
+	} else {
+		ServerConfig.Debug = false
 	}
-	initLogger(config.settings.Debug)
-
-	return &config
 }
 
-func (config *Config) Settings() *Settings {
-	return config.settings
-}
-
-func initLogger(debug bool) {
-	once.Do(func() {
-		Log.SetFormatter(&logrus.TextFormatter{
-			DisableColors: false,
-			FullTimestamp: true,
-		})
-
-		if debug {
-			Log.SetLevel(logrus.DebugLevel)
-		} else {
-			Log.SetLevel(logrus.InfoLevel)
-		}
-	})
+func loadAppIni(path string) *ini.File {
+	cfg, err := ini.Load(path)
+	if err != nil {
+		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
+		os.Exit(1)
+	}
+	return cfg
 }
