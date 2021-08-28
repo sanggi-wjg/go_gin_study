@@ -52,12 +52,12 @@ func main() {
 	router := gin.New()
 	router.Use(server.Logger(), server.Recovery())
 
-	router.Static(server.AppConfig.StaticURL, server.AppConfig.StaticRoot)
-	router.Static(server.AppConfig.MediaURL, server.AppConfig.MediaRoot)
-	router.StaticFile(server.AppConfig.FavIconURL, server.AppConfig.FavIconPath)
+	// router.Static(server.AppConfig.StaticURL, server.AppConfig.StaticRoot)
+	// router.Static(server.AppConfig.MediaURL, server.AppConfig.MediaRoot)
+	// router.StaticFile(server.AppConfig.FavIconURL, server.AppConfig.FavIconPath)
 	// router.LoadHTMLGlob(server.AppConfig.TemplateRoot)
 
 	server.RegisterRoutes(router)
 
-	router.Run(":9000")
+	router.Run(":8080")
 }
