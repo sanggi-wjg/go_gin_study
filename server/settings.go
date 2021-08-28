@@ -1,6 +1,9 @@
 package server
 
-import "runtime"
+import (
+	"os"
+	"runtime"
+)
 
 type Settings struct {
 	Debug         bool
@@ -35,4 +38,12 @@ func NewSettings() *Settings {
 
 	}
 	return &settings
+}
+
+func getEnv(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		Log.Panicln(key + "must be set")
+	}
+	return value
 }

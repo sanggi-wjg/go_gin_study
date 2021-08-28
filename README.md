@@ -14,7 +14,7 @@ set GOBIN=C:\Go_project\bin
 ```
 # gin Web Framework
 go get -u github.com/gin-gonic/gin
-https://github.com/gin-gonic/gin#using-get-post-put-patch-delete-and-options
+https://github.com/gin-gonic/gin
 
 # Log
 go get github.com/sirupsen/logrus

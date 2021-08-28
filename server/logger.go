@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logger = logrus.Logger{
+var Log = logrus.Logger{
 	Out:          os.Stderr,
 	Formatter:    &logrus.TextFormatter{},
 	Level:        logrus.DebugLevel,
@@ -40,6 +40,6 @@ func Logger() gin.HandlerFunc {
 		}
 
 		// Use debug level to keep production logs clean.
-		logger.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
+		Log.Debugf("http: %s %s (%3d) [%v]", method, path, statusCode, latency)
 	}
 }

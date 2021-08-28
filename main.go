@@ -7,12 +7,19 @@ import (
 )
 
 func main() {
-	router := gin.New()
-	router.Use(server.Logger(), server.Recovery())
-
 	// Config
 	config := server.NewConfig()
 	settings := config.Settings()
+
+	if settings.Debug == true {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	// gin
+	router := gin.New()
+	router.Use(server.Logger(), server.Recovery())
 
 	// Route
 	router.Static(settings.StaticURL, settings.StaticRoot)
