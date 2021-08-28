@@ -2,7 +2,7 @@ FROM    ubuntu:20.04
 
 ########################################################################################
 # docker build -t for_go .
-# docker run -d -p 9000:9000 --privileged=true --name for_go for_go /usr/sbin/init
+# docker run -d -p 9022:9022 -p 9000:9000 --privileged=true --name for_go for_go /usr/sbin/init
 # docker exec -it for_go bash
 ########################################################################################
 ARG     DEBIAN_FRONTEND=noninteractive
@@ -12,7 +12,7 @@ ENV     TZ=Asia/Seoul
 # Set Basic 
 ########################################################################################
 RUN     apt-get update && apt-get -y upgrade
-RUN     apt install -y build-essential wget curl git
+RUN     apt install -y build-essential wget curl git 
 
 ########################################################################################
 # Set Entrypoint 
