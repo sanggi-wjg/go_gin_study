@@ -14,14 +14,16 @@ type Server struct {
 	ReadTimeout   time.Duration
 	WriteTimeout  time.Duration
 	FileAllowExts []string
+	BasePath      string
 }
 
 type Database struct {
-	Type     string
-	Host     string
-	Port     int
-	User     string
-	Password string
+	Type         string
+	Host         string
+	Port         int
+	User         string
+	Password     string
+	DatabaseName string
 }
 
 type App struct {
@@ -51,6 +53,7 @@ func InitConfig() {
 
 	ServerConfig.WriteTimeout = ServerConfig.WriteTimeout * time.Second
 	ServerConfig.ReadTimeout = ServerConfig.ReadTimeout * time.Second
+	ServerConfig.BasePath = getBasePath()
 
 	if ServerConfig.RunMode == "debug" {
 		ServerConfig.Debug = true
@@ -62,8 +65,17 @@ func InitConfig() {
 func loadAppIni(path string) *ini.File {
 	cfg, err := ini.Load(path)
 	if err != nil {
-		Log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
+		panic("fail to parse 'app.ini'")
 		os.Exit(1)
 	}
 	return cfg
+}
+
+func getBasePath() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+		os.Exit(1)
+	}
+	return dir
 }
