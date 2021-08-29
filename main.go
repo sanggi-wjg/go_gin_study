@@ -11,11 +11,14 @@ func init() {
 	server.InitConfig()
 	server.InitLogger(server.ServerConfig.Debug)
 	models.InitDatabase()
+
+	if server.ServerConfig.Debug {
+		gin.ForceConsoleColor()
+	}
+	gin.SetMode(server.ServerConfig.RunMode)
 }
 
 func main() {
-	gin.SetMode(server.ServerConfig.RunMode)
-
 	router := gin.New()
 	router.Use(server.Logger(), server.Recovery())
 
@@ -26,5 +29,8 @@ func main() {
 
 	server.RegisterRoutes(router)
 
-	router.Run(server.ServerConfig.HttpPort)
+	err := router.Run(server.ServerConfig.HttpPort)
+	if err != nil {
+		panic(err)
+	}
 }

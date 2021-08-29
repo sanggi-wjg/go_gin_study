@@ -43,17 +43,38 @@ var ServerConfig = &Server{}
 var DatabaseConfig = &Database{}
 var AppConfig = &App{}
 
+var cfg *ini.File
+
 func InitConfig() {
 	// TODO : env 비교해서 ini 정해주자 env := os.Getenv("ENV")
-	cfg := loadAppIni("app_debug.ini")
+	cfg = loadAppIni("app_debug.ini")
 
-	cfg.Section("Server").MapTo(ServerConfig)
-	cfg.Section("Database").MapTo(DatabaseConfig)
-	cfg.Section("App").MapTo(AppConfig)
+	mapTo("Server", ServerConfig)
+	mapTo("Database", DatabaseConfig)
+	mapTo("App", AppConfig)
 
+	configToGoReadable()
+}
+
+func loadAppIni(path string) *ini.File {
+	cfg, err := ini.Load(path)
+	if err != nil {
+		panic("fail to parse 'app.ini'")
+	}
+	return cfg
+}
+
+func mapTo(section string, config interface{}) {
+	err := cfg.Section(section).MapTo(config)
+	if err != nil {
+		panic("fail to load section:" + section)
+	}
+}
+
+func configToGoReadable() {
+	ServerConfig.BasePath = getBasePath()
 	ServerConfig.WriteTimeout = ServerConfig.WriteTimeout * time.Second
 	ServerConfig.ReadTimeout = ServerConfig.ReadTimeout * time.Second
-	ServerConfig.BasePath = getBasePath()
 
 	if ServerConfig.RunMode == "debug" {
 		ServerConfig.Debug = true
@@ -62,20 +83,10 @@ func InitConfig() {
 	}
 }
 
-func loadAppIni(path string) *ini.File {
-	cfg, err := ini.Load(path)
-	if err != nil {
-		panic("fail to parse 'app.ini'")
-		os.Exit(1)
-	}
-	return cfg
-}
-
 func getBasePath() string {
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
-		os.Exit(1)
 	}
 	return dir
 }

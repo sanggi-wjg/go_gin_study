@@ -43,7 +43,7 @@ sudo docker inspect mysql_1 | grep IPAddress
 docker exec -it mysql_1 bash
 
 select user,host,authentication_string from mysql.user order by user;
-create user 'root'@'172.17.0.1' identified by 'rootroot';
-grant all privileges on *.* to 'root'@'172.17.0.1' with grant option;
+create user 'root'@'192.168.10.81' identified by 'rootroot';
+grant all privileges on *.* to 'root'@'192.168.10.81' with grant option;
 flush privileges;
 ```
