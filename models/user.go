@@ -39,8 +39,8 @@ func GetUserByUserIdOne(userId string) (*User, error) {
 	return &user, nil
 }
 
-func GetUserList() (*[]User, error) {
-	var users []User
+func GetUserList() ([]*User, error) {
+	var users []*User
 
 	result := db.Find(&users)
 	err := result.Error
@@ -48,5 +48,5 @@ func GetUserList() (*[]User, error) {
 		return nil, err
 	}
 
-	return &users, nil
+	return users, nil
 }
