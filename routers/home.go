@@ -1,8 +1,8 @@
-package home
+package routers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"go_gin_study/server"
 	"go_gin_study/service"
 	"net/http"
 )
@@ -10,8 +10,10 @@ import (
 func Ping(c *gin.Context) {
 	userService := service.User{}
 	users, err := userService.GetAll()
-	fmt.Println(users)
-	fmt.Println(err)
+	server.Debug(users, err)
+	if err != nil {
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "pong",

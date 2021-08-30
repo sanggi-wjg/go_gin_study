@@ -9,9 +9,8 @@ type User struct {
 }
 
 func (u *User) GetAll() ([]*models.User, error) {
-	var users []*models.User
-
-	users, err := models.GetUserList()
+	//var users []*models.User
+	users, err := models.GetUserAll()
 	if err != nil {
 		return nil, err
 	}

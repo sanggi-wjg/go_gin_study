@@ -2,6 +2,7 @@ package main
 
 import (
 	"go_gin_study/models"
+	"go_gin_study/routers"
 	"go_gin_study/server"
 
 	"github.com/gin-gonic/gin"
@@ -25,9 +26,9 @@ func main() {
 	router.Static(server.AppConfig.StaticURL, server.AppConfig.StaticRoot)
 	router.Static(server.AppConfig.MediaURL, server.AppConfig.MediaRoot)
 	router.StaticFile(server.AppConfig.FavIconURL, server.AppConfig.FavIconPath)
-	// router.LoadHTMLGlob(server.AppConfig.TemplateRoot)
+	// routers.LoadHTMLGlob(server.AppConfig.TemplateRoot)
 
-	server.RegisterRoutes(router)
+	routers.RegisterRoutes(router)
 
 	err := router.Run(server.ServerConfig.HttpPort)
 	if err != nil {

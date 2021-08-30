@@ -26,9 +26,30 @@ func InitLogger(debug bool) {
 			FullTimestamp: true,
 		})
 	} else {
+		//Log.SetOutput()
 		Log.SetLevel(logrus.InfoLevel)
 		Log.SetFormatter(&logrus.JSONFormatter{})
 	}
+}
+
+func Debug(v ...interface{}) {
+	Log.Debugln(v)
+
+}
+func Info(v ...interface{}) {
+	Log.Infoln(v)
+}
+
+func Warn(v ...interface{}) {
+	Log.Warnln(v)
+}
+
+func Error(v ...interface{}) {
+	Log.Errorln(v)
+}
+
+func Fatal(v ...interface{}) {
+	Log.Fatalln(v)
 }
 
 func Logger() gin.HandlerFunc {

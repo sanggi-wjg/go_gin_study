@@ -27,7 +27,7 @@ func IsAuthenticate(userId string, password string) (bool, error) {
 	return true, nil
 }
 
-func GetUserByUserIdOne(userId string) (*User, error) {
+func GetUserByUserId(userId string) (*User, error) {
 	var user User
 
 	result := db.Where(&User{UserId: userId}).First(&user)
@@ -39,7 +39,7 @@ func GetUserByUserIdOne(userId string) (*User, error) {
 	return &user, nil
 }
 
-func GetUserList() ([]*User, error) {
+func GetUserAll() ([]*User, error) {
 	var users []*User
 
 	result := db.Find(&users)

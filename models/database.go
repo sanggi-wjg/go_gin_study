@@ -12,7 +12,7 @@ var db *gorm.DB
 
 func InitDatabase() {
 	connectDatabase()
-	//migrateTables()
+	migrateTables()
 }
 
 func connectDatabase() {
@@ -33,7 +33,7 @@ func connectDatabase() {
 
 func migrateTables() {
 	if db.Migrator().HasTable(&User{}) == false {
-		fmt.Println("migrate user table")
+		server.Info("users table migrated")
 		err := db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(&User{})
 		if err != nil {
 			panic(err)
