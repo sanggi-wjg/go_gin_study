@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
 	Idx          uint   `gorm:"primaryKey;autoIncrement;"`
@@ -23,4 +25,28 @@ func IsAuthenticate(userId string, password string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func GetUserByUserIdOne(userId string) (*User, error) {
+	var user User
+
+	result := db.Where(&User{UserId: userId}).First(&user)
+	err := result.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func GetUserList() (*[]User, error) {
+	var users []User
+
+	result := db.Find(&users)
+	err := result.Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &users, nil
 }

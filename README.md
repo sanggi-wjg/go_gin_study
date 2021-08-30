@@ -26,6 +26,8 @@ go get -u gorm.io/driver/sqlite  (Dev)
 
 # Read ini  https://github.com/go-ini/ini
 go get -u github.com/go-ini/ini
+
+go get -u github.com/stretchr/testify
 ```
 
 ## TODO
