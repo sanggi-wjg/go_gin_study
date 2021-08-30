@@ -5,6 +5,7 @@ import "go_gin_study/models"
 type User struct {
 	Idx          uint
 	UserId       string
+	UserEmail    string
 	UserPassword string
 }
 

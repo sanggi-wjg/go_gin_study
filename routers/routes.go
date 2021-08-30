@@ -6,6 +6,7 @@ import (
 
 func RegisterRoutes(router *gin.Engine) {
 	router.GET("/ping", Ping)
+	router.GET("/users", Users)
 
 	// 	user := routers.Group("/user")
 	// 	{

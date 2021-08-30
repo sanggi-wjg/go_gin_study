@@ -50,3 +50,22 @@ func GetUserAll() ([]*User, error) {
 
 	return users, nil
 }
+
+func CreateNormalUser(userId, userEmail, password string) (uint, error) {
+	user := User{
+		UserId:       userId,
+		UserEmail:    userEmail,
+		UserPassword: password,
+	}
+	result := db.Create(&user)
+	err := result.Error
+	if err != nil {
+		return 0, err
+	}
+
+	return user.Idx, nil
+}
+
+func CreateSuperUser() {
+
+}
