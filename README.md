@@ -36,7 +36,7 @@ go get -u github.com/stretchr/testify
 gin framework middleware
 ```
 
-## MYSQL
+## MySQL
 ```
 docker pull mysql:5.7
 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootroot --name mysql_1 mysql:5.7

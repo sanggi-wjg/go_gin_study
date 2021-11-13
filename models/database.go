@@ -33,8 +33,16 @@ func connectDatabase() {
 
 func migrateTables() {
 	if db.Migrator().HasTable(&User{}) == false {
-		server.Info("users table migrated")
+		server.Debug("Create users Table")
 		err := db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(&User{})
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	if db.Migrator().HasTable(&InQueue{}) == false {
+		server.Debug("Create in_queues Table")
+		err := db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(&InQueue{})
 		if err != nil {
 			panic(err)
 		}
