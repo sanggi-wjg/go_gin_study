@@ -47,7 +47,7 @@ var cfg *ini.File
 
 func InitConfig() {
 	// TODO : env 비교해서 ini 정해주자 env := os.Getenv("ENV")
-	cfg = loadAppIni("app_debug.ini")
+	cfg = loadAppIni("conf/app_debug.ini")
 
 	mapTo("Server", ServerConfig)
 	mapTo("Database", DatabaseConfig)
@@ -59,7 +59,7 @@ func InitConfig() {
 func loadAppIni(path string) *ini.File {
 	cfg, err := ini.Load(path)
 	if err != nil {
-		panic("fail to parse 'app.ini'")
+		panic("fail to parse: " + path)
 	}
 	return cfg
 }
@@ -67,7 +67,7 @@ func loadAppIni(path string) *ini.File {
 func mapTo(section string, config interface{}) {
 	err := cfg.Section(section).MapTo(config)
 	if err != nil {
-		panic("fail to load section:" + section)
+		panic("fail to load section: " + section)
 	}
 }
 

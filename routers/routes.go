@@ -10,6 +10,8 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/ping", Ping)
 	router.GET("/users", Users)
 
+	router.GET("/excel", Excel)
+
 	// 	user := routers.Group("/user")
 	// 	{
 	// 		// This handler will match /user/john but will not match /user/ or /user
