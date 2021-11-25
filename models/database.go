@@ -2,53 +2,63 @@ package models
 
 import (
 	"fmt"
-	"go_gin_study/server"
+	"log"
+	"os"
+	"time"
 
+	"github.nhnent.com/godo/cfo/server/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
+
+type Model struct {
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
 
 var db *gorm.DB
 
-func InitDatabase() {
-	connectDatabase()
-	migrateTables()
-}
-
-func connectDatabase() {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		server.DatabaseConfig.User,
-		server.DatabaseConfig.Password,
-		server.DatabaseConfig.Host,
-		server.DatabaseConfig.Port,
-		server.DatabaseConfig.DatabaseName,
+func Init() {
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Info, // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			Colorful:                  true,        // Able color
+		},
 	)
 
 	var err error
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(getDSN()), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		panic(err)
 	}
+	migrateTable()
+	// db.SingularTable(true)
+	// db.DB().SetMaxIdleConns(10)
+	// db.DB().SetMaxOpenConns(100)
 }
 
-func migrateTables() {
+func getDSN() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		config.DatabaseConfig.User,
+		config.DatabaseConfig.Password,
+		config.DatabaseConfig.Host,
+		config.DatabaseConfig.Port,
+		config.DatabaseConfig.DatabaseName,
+	)
+}
+
+func migrateTable() {
 	if db.Migrator().HasTable(&User{}) == false {
-		server.Debug("Create users Table")
 		err := db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(&User{})
 		if err != nil {
 			panic(err)
 		}
 	}
-
-	if db.Migrator().HasTable(&InQueue{}) == false {
-		server.Debug("Create in_queues Table")
-		err := db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(&InQueue{})
-		if err != nil {
-			panic(err)
-		}
-	}
 }
-
-// func CloseDB() {
-// 	defer db.Close()
-// }

@@ -1,71 +1,70 @@
 package models
 
 import (
+	"errors"
+
+	"github.nhnent.com/godo/cfo/server/util"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	Idx          uint   `gorm:"primaryKey;autoIncrement;"`
-	UserId       string `gorm:"size:20;unique;not null;"`
-	UserEmail    string `gorm:"size:50;unique;not null;"`
-	UserPassword string `gorm:"size:100;not null;"`
-	Created      uint64 `gorm:"autoCreateTime"`
-	LastLogin    uint64 `gorm:"default:0"`
-	IsSuperUser  int    `gorm:"default:1"`
+	ID        uint   `gorm:"primaryKey;autoIncrement;"`
+	UserName  string `gorm:"size:50;not null;unique;"`
+	Password  string `gorm:"size:200;not null;"`
+	UserLevel uint   `gorm:"not null;default:3"`
+	gorm.Model
 }
 
-func IsAuthenticate(userId string, password string) (bool, error) {
-	var user User
-	err := db.Select("idx").Where(User{
-		UserId: userId, UserPassword: password,
-	}).First(&user).Error
+var (
+	errWrongUsername = errors.New("username 확인해주세요.")
+	errWrongPasswd   = errors.New("password 확인해주세요.")
+)
 
-	if err != nil && err != gorm.ErrRecordNotFound {
+func CheckUserByUserNameAndPassword(username string, password string) (bool, error) {
+	var user User
+	err := db.Select("id", "password").Where(User{UserName: username}).Take(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, errWrongUsername
+		}
 		return false, err
 	}
 
-	return true, nil
+	isValidPwd := util.CheckPasswordHash(password, user.Password)
+	if !isValidPwd {
+		return false, errWrongPasswd
+	}
+	// err = db.Select("id").Where(User{UserName: username, Password: pwd}).Take(&user).Error
+	// if err != nil {
+	// 	if err == gorm.ErrRecordNotFound {
+	// 		return false, errNotExistUser
+	// 	}
+	// 	return false, err
+	// }
+	if user.ID > 0 {
+		return true, nil
+	}
+	return false, nil
 }
 
-func GetUserByUserId(userId string) (*User, error) {
+func IsExistUsername(username string) bool {
 	var user User
-
-	result := db.Where(&User{UserId: userId}).First(&user)
-	err := result.Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
+	res := db.Where("user_name = ?", username).First(&user)
+	if res.Error == gorm.ErrRecordNotFound {
+		return false
 	}
-
-	return &user, nil
+	if user.ID > 0 {
+		return true
+	}
+	return false
 }
 
-func GetUserAll() ([]*User, error) {
-	var users []*User
-
-	result := db.Find(&users)
-	err := result.Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
+func CreateUser(username string, password string, userlevel uint) (uint, error) {
+	user := User{UserName: username, Password: password, UserLevel: userlevel}
+	res := db.Select("UserName", "Password", "UserLevel").Create(&user)
+	if res.Error != nil {
+		return 0, res.Error
 	}
 
-	return users, nil
-}
-
-func CreateNormalUser(userId, userEmail, password string) (uint, error) {
-	user := User{
-		UserId:       userId,
-		UserEmail:    userEmail,
-		UserPassword: password,
-	}
-	result := db.Create(&user)
-	err := result.Error
-	if err != nil {
-		return 0, err
-	}
-
-	return user.Idx, nil
-}
-
-func CreateSuperUser() {
-
+	return user.ID, nil
 }

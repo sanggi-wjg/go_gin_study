@@ -1,51 +1,29 @@
-# Go gin Study
+# cfo
 
-## [환경]
+### Module
 ```
-go version go1.17
-
-GOROOT=/goroot
-GOPATH=/gopath
-PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+Front Templates
+https://github.com/dpwilhelmsen/sb-admin-2-bootstrap-4
 ```
 
-## 설치 Package
+
+### go module
 ```
-# gin Web Framework  https://github.com/gin-gonic/gin
-go get -u github.com/gin-gonic/gin
+go env -w GO111MODULE=on
+go mod init github.nhnent.com/godo/cfo
 
-# Log  https://github.com/sirupsen/logrus
-go get -u github.com/sirupsen/logrus
+# if package update
+go mod vendor
+```
+Go Pacakge 들은 go.mod 에서 module 확인
 
-# ORM  https://gorm.io/
-go get -u gorm.io/gorm
-go get -u gorm.io/driver/mysql
-go get -u gorm.io/driver/sqlite  (Dev)
 
-# Excel  https://github.com/qax-os/excelize
-
-# Read ini  https://github.com/go-ini/ini
-go get -u github.com/go-ini/ini
-
-go get -u github.com/stretchr/testify
+### Start
+```
+go run main.go
 ```
 
-## TODO
-``` 
-# 프레임워크 미들웨어 개발해보자
-gin framework middleware
+### Ref
 ```
-
-## MySQL
-```
-docker pull mysql:5.7
-docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootroot --name mysql_1 mysql:5.7
-
-sudo docker inspect mysql_1 | grep IPAddress
-docker exec -it mysql_1 bash
-
-select user,host,authentication_string from mysql.user order by user;
-create user 'root'@'192.168.10.81' identified by 'rootroot';
-grant all privileges on *.* to 'root'@'192.168.10.81' with grant option;
-flush privileges;
+https://chenyitian.gitbooks.io/gin-tutorials/content/gin/11.html
 ```
